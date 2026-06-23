@@ -781,10 +781,19 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('role-badge-el').innerHTML = `<span class="role-badge rb-${rol}">${ROLE_LABELS[rol]}</span>`;
     document.getElementById('role-desc-el').textContent = ' — ' + ROLE_DESCS[rol];
 
-    // Mostrar/ocultar tabs según rol
-    if(!puede('historial'))  document.getElementById('tab-historial').classList.add('hidden');
-    if(!puede('reportes'))   document.getElementById('tab-reportes').classList.add('hidden');
-    if(puede('admin'))       document.getElementById('tab-admin').classList.remove('hidden');
+    // Resetear tabs primero
+    document.getElementById('tab-historial').classList.remove('hidden');
+    document.getElementById('tab-reportes').classList.remove('hidden');
+    document.getElementById('tab-admin').classList.add('hidden');
+
+    // Aplicar permisos según rol
+    if(!['superadmin','admin_prussian','admin_gruas'].includes(rol)) {
+      document.getElementById('tab-historial').classList.add('hidden');
+      document.getElementById('tab-reportes').classList.add('hidden');
+    }
+    if(['superadmin','admin_prussian'].includes(rol)) {
+      document.getElementById('tab-admin').classList.remove('hidden');
+    }
 
     // Columna eliminar
     if(puede('eliminar')) {
